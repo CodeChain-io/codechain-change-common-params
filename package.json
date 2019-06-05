@@ -1,0 +1,50 @@
+{
+  "name": "parameter-changer",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://codechain-io.github.io/parameter-changer",
+  "dependencies": {
+    "@types/bn.js": "^4.11.5",
+    "@types/jest": "24.0.11",
+    "@types/node": "11.13.7",
+    "@types/react": "16.8.14",
+    "@types/react-dom": "16.8.4",
+    "bn.js": "^4.11.8",
+    "react": "^16.8.6",
+    "react-bootstrap": "^1.0.0-beta.8",
+    "react-dom": "^16.8.6",
+    "react-scripts": "^3.0.1",
+    "rlp": "^2.2.3",
+    "typescript": "3.4.5"
+  },
+  "scripts": {
+    "fmt": "eslint --ext .ts,.tsx ./src --fix && prettier 'src/**/*.{ts,tsx,json}' --write",
+    "lint": "eslint --ext .ts,.tsx ./src && prettier 'src/**/*.{ts,tsx,json}' --list-different",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "react-scripts build",
+    "deploy": "gh-pages -d build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "eslint-plugin-react": "^7.12.4",
+    "gh-pages": "^2.0.1",
+    "prettier": "^1.17.0"
+  }
+}
