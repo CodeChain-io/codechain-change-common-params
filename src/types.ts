@@ -1,4 +1,6 @@
-import { U64Value } from "codechain-primitives";
+import { U64Value, U64 } from "codechain-primitives";
+
+const RLP = require("rlp");
 
 export type NetworkId = string;
 
@@ -105,6 +107,21 @@ export function defaultParams(): Params {
     delegationThreshold: 0,
     minDeposit: 0,
   };
+}
+
+export function paramsToRLPBytes(params: Params): Buffer {
+  return RLP.encode([
+    0xff,
+    0,
+    ...ParamsKeys.map(key => {
+      // FIXME: This code would be broken easily when a field is added to the Params.
+      if (key === "networkId") {
+        return params[key];
+      } else {
+        return U64.ensure(params[key]).toEncodeObject();
+      }
+    }),
+  ]);
 }
 
 export type Signature = string;

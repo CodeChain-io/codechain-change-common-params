@@ -10,7 +10,7 @@ interface OwnParams {
 export default class ParamsEditor extends Component<OwnParams, any> {
   public render() {
     return (
-      <Col xs={12} className="border rounded px-5 py-3">
+      <Col xs={12} className="border rounded px-5 py-3 bg-light">
         <Row>
           <Col xs={12}>
             <h2>Params</h2>

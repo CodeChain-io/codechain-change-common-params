@@ -31,7 +31,7 @@ export default class App extends React.Component<{}, AppState> {
         <Row>
           <ParamsEditor params={this.state.params} onChangeParams={this.handleChangeParams} />
         </Row>
-        <Row>
+        <Row className="mt-3">
           <PermalinkPrinter params={this.state.params} />
         </Row>
         <Row>
