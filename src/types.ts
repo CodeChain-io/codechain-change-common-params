@@ -1,6 +1,5 @@
 import { U64Value, U64 } from "codechain-primitives";
-
-const RLP = require("rlp");
+import * as RLP from "rlp";
 
 export type NetworkId = string;
 
@@ -118,10 +117,128 @@ export function paramsToRLPBytes(params: Params): Buffer {
       if (key === "networkId") {
         return params[key];
       } else {
-        return U64.ensure(params[key]).toEncodeObject();
+        return U64.ensure(params[key]).rlpBytes();
       }
     }),
   ]);
+}
+
+function rlpToU64(value: Buffer, debugFieldName: string) {
+  try {
+    if (value.length === 0) {
+      return new U64(0);
+    } else {
+      return U64.fromBytes(value);
+    }
+  } catch (err) {
+    const newError = new Error(`Failed to decode ${debugFieldName}`);
+    (newError as any).original = err;
+    throw newError;
+  }
+}
+
+export function RLPBytesToParams(hex: string): Params {
+  const decoded: Buffer[] = RLP.decode(new Buffer(hex, "hex")) as any;
+
+  if (decoded.length !== ParamsKeys.length + 2) {
+    throw new Error(
+      `Invalid RLP: length of the input: ${decoded.length} should be ${ParamsKeys.length + 2}`,
+    );
+  }
+
+  if (decoded[0].toString("hex") !== "ff") {
+    throw new Error(`Invalid format:  expected: "ff" but found ${decoded[0].toString("hex")}`);
+  }
+  if (decoded[1].length !== 0) {
+    throw new Error(`Invalid format`);
+  }
+  const [
+    ,
+    ,
+    maxExtraDataSizeRaw,
+    maxAssetSchemeMetadataSizeRaw,
+    maxTransferMetadataSizeRaw,
+    maxTextContentSizeRaw,
+    networkIdRaw,
+    minPayTransactionCostRaw,
+    minSetRegularKeyTransactionCostRaw,
+    minCreateShardTransactionCostRaw,
+    minSetShardOwnersTransactionCostRaw,
+    minSetShardUsersTransactionCostRaw,
+    minWrapCccTransactionCostRaw,
+    minCustomTransactionCostRaw,
+    minStoreTransactionCostRaw,
+    minRemoveTransactionCostRaw,
+    minAssetMintCostRaw,
+    minAssetTransferCostRaw,
+    minAssetSchemeChangeCostRaw,
+    minAssetSupplyIncreaseCostRaw,
+    minAssetComposeCostRaw,
+    minAssetDecomposeCostRaw,
+    minAssetUnwrapCccCostRaw,
+    maxBodySizeRaw,
+    snapshotPeriodRaw,
+    termSecondsRaw,
+    nominationExpirationRaw,
+    custodyPeriodRaw,
+    releasePeriodRaw,
+    maxNumOfValidatorsRaw,
+    minNumOfValidatorsRaw,
+    delegationThresholdRaw,
+    minDepositRaw,
+  ] = decoded;
+
+  return {
+    maxExtraDataSize: rlpToU64(maxExtraDataSizeRaw, "maxExtraDataSize"),
+    maxAssetSchemeMetadataSize: rlpToU64(
+      maxAssetSchemeMetadataSizeRaw,
+      "maxAssetSchemeMetadataSize",
+    ),
+    maxTransferMetadataSize: rlpToU64(maxTransferMetadataSizeRaw, "maxTransferMetadataSize"),
+    maxTextContentSize: rlpToU64(maxTextContentSizeRaw, "maxTextContentSize"),
+    networkId: networkIdRaw.toString("ascii"),
+    minPayTransactionCost: rlpToU64(minPayTransactionCostRaw, "minPayTransactionCost"),
+    minSetRegularKeyTransactionCost: rlpToU64(
+      minSetRegularKeyTransactionCostRaw,
+      "minSetRegularKeyTransactionCost",
+    ),
+    minCreateShardTransactionCost: rlpToU64(
+      minCreateShardTransactionCostRaw,
+      "minCreateShardTransactionCost",
+    ),
+    minSetShardOwnersTransactionCost: rlpToU64(
+      minSetShardOwnersTransactionCostRaw,
+      "minSetShardOwnersTransactionCost",
+    ),
+    minSetShardUsersTransactionCost: rlpToU64(
+      minSetShardUsersTransactionCostRaw,
+      "minSetShardUsersTransactionCost",
+    ),
+    minWrapCccTransactionCost: rlpToU64(minWrapCccTransactionCostRaw, "minWrapCccTransactionCost"),
+    minCustomTransactionCost: rlpToU64(minCustomTransactionCostRaw, "minCustomTransactionCost"),
+    minStoreTransactionCost: rlpToU64(minStoreTransactionCostRaw, "minStoreTransactionCost"),
+    minRemoveTransactionCost: rlpToU64(minRemoveTransactionCostRaw, "minRemoveTransactionCost"),
+    minAssetMintCost: rlpToU64(minAssetMintCostRaw, "minAssetMintCost"),
+    minAssetTransferCost: rlpToU64(minAssetTransferCostRaw, "minAssetTransferCost"),
+    minAssetSchemeChangeCost: rlpToU64(minAssetSchemeChangeCostRaw, "minAssetSchemeChangeCost"),
+    minAssetSupplyIncreaseCost: rlpToU64(
+      minAssetSupplyIncreaseCostRaw,
+      "minAssetSupplyIncreaseCost",
+    ),
+    minAssetComposeCost: rlpToU64(minAssetComposeCostRaw, "minAssetComposeCost"),
+    minAssetDecomposeCost: rlpToU64(minAssetDecomposeCostRaw, "minAssetDecomposeCost"),
+    minAssetUnwrapCccCost: rlpToU64(minAssetUnwrapCccCostRaw, "minAssetUnwrapCccCost"),
+    maxBodySize: rlpToU64(maxBodySizeRaw, "maxBodySize"),
+    snapshotPeriod: rlpToU64(snapshotPeriodRaw, "snapshotPeriod"),
+    termSeconds: rlpToU64(termSecondsRaw, "termSeconds"),
+    nominationExpiration: rlpToU64(nominationExpirationRaw, "nominationExpiration"),
+    custodyPeriod: rlpToU64(custodyPeriodRaw, "custodyPeriod"),
+    releasePeriod: rlpToU64(releasePeriodRaw, "releasePeriod"),
+    maxNumOfValidators: rlpToU64(maxNumOfValidatorsRaw, "maxNumOfValidators"),
+    minNumOfValidators: rlpToU64(minNumOfValidatorsRaw, "minNumOfValidators"),
+    delegationThreshold: rlpToU64(delegationThresholdRaw, "delegationThreshold"),
+    minDeposit: rlpToU64(minDepositRaw, "minDeposit"),
+  };
 }
 
 export type Signature = string;

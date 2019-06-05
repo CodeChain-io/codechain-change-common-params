@@ -25,10 +25,11 @@ export default class App extends React.Component<{}, AppState> {
   public render() {
     return (
       <Container>
-        <Row>
+        <h1 className="mt-3">Change Common Params</h1>
+        <Row className="mt-1">
           <ParamsLoader onLoadParams={this.handleLoadParams} />
         </Row>
-        <Row>
+        <Row className="mt-3">
           <ParamsEditor params={this.state.params} onChangeParams={this.handleChangeParams} />
         </Row>
         <Row className="mt-3">
