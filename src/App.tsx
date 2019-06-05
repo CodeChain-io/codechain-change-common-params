@@ -1,6 +1,6 @@
 import React from "react";
 import ParamsLoader from "./Components/ParamsLoader";
-import ParamsViewer from "./Components/ParamsViewer";
+import ParamsEditor from "./Components/ParamsEditor";
 import PermalinkPrinter from "./Components/PermalinkPrinter";
 import SignatureCollector from "./Components/SignatureCollector";
 import TransactionCreator from "./Components/TransactionCreator";
@@ -29,7 +29,7 @@ export default class App extends React.Component<{}, AppState> {
           <ParamsLoader onLoadParams={this.handleLoadParams} />
         </Row>
         <Row>
-          <ParamsViewer params={this.state.params} />
+          <ParamsEditor params={this.state.params} onChangeParams={this.handleChangeParams} />
         </Row>
         <Row>
           <PermalinkPrinter params={this.state.params} />
@@ -51,6 +51,12 @@ export default class App extends React.Component<{}, AppState> {
   private handleLoadParams = (newParams: Params) => {
     this.setState({
       params: newParams,
+    });
+  };
+
+  private handleChangeParams = (changedParams: Params) => {
+    this.setState({
+      params: changedParams,
     });
   };
 

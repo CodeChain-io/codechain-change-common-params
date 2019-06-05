@@ -10,6 +10,8 @@
     "@types/react": "16.8.14",
     "@types/react-dom": "16.8.4",
     "bn.js": "^4.11.8",
+    "codechain-primitives": "^1.0.1",
+    "codechain-sdk": "^1.2.0",
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.8",
     "react-dom": "^16.8.6",
