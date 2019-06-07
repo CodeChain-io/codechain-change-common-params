@@ -6,6 +6,8 @@ import SignatureCollector from "./Components/SignatureCollector";
 import TransactionCreator from "./Components/TransactionCreator";
 import { Params, defaultParams, Signature } from "./types";
 import { Container, Row } from "react-bootstrap";
+import { Route } from "react-router-dom";
+import Viewer from "./Viewer";
 
 type AppState = {
   params: Params;
@@ -23,6 +25,15 @@ export default class App extends React.Component<{}, AppState> {
   }
 
   public render() {
+    return (
+      <>
+        <Route exact path={"/"} component={this.Index} />
+        <Route path={"/:encodedParams"} component={Viewer} />
+      </>
+    );
+  }
+
+  private Index = () => {
     return (
       <Container>
         <h1 className="mt-3">Change Common Params</h1>
@@ -52,7 +63,7 @@ export default class App extends React.Component<{}, AppState> {
         </Row>
       </Container>
     );
-  }
+  };
 
   private handleLoadParams = (newParams: Params) => {
     this.setState({

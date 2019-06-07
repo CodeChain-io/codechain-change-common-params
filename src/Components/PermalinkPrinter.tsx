@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Params, paramsToRLPBytes } from "../types";
 import { Col } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 interface OwnProps {
   params: Params;
@@ -20,14 +21,10 @@ export default class PermalinkPrinter extends Component<OwnProps, any> {
         <h2>Result</h2>
         <p>Please provide the link below to other stakeholders for signing.</p>
         {rlpBytes && (
-          <a
-            className="overflow-wrap"
-            href={`https://change-common-params.codechain.io/${rlpBytes}`}
-          >
-            https://change-common-params.codechain.io/{rlpBytes}
-          </a>
+          <Link to={`/${rlpBytes}`} className="overflow-wrap">
+            {`${window.location.href}${rlpBytes}`}
+          </Link>
         )}
-
         <p className="overflow-wrap mt-1">RLP data of the Params: {rlpBytes || "Invalid Params"}</p>
       </Col>
     );

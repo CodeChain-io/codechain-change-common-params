@@ -5,9 +5,10 @@ import { Row, Col, Form } from "react-bootstrap";
 interface OwnParams {
   params: Params;
   onChangeParams: (changedParams: Params) => void;
+  disabled?: boolean;
 }
 
-export default class ParamsEditor extends Component<OwnParams, any> {
+class ParamsEditor extends Component<OwnParams, any> {
   public render() {
     return (
       <Col xs={12} className="border rounded px-5 py-3 bg-light">
@@ -30,6 +31,7 @@ export default class ParamsEditor extends Component<OwnParams, any> {
                         type="text"
                         value={String(this.props.params[key])}
                         onChange={(event: any) => this.handleInputChange(key, event)}
+                        disabled={this.props.disabled}
                       />
                     </Col>
                   </Form.Group>
@@ -51,3 +53,9 @@ export default class ParamsEditor extends Component<OwnParams, any> {
     this.props.onChangeParams(newParams);
   };
 }
+
+(ParamsEditor as any).defaultProps = {
+  disabled: false,
+};
+
+export default ParamsEditor;
