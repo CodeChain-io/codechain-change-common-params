@@ -35,7 +35,7 @@ export default class App extends React.Component<{}, AppState> {
         <Row className="mt-3">
           <PermalinkPrinter params={this.state.params} />
         </Row>
-        <Row>
+        <Row className="mt-3">
           <SignatureCollector
             signatures={this.state.signatures}
             onAddSignature={this.handleAddSignature}
@@ -70,9 +70,10 @@ export default class App extends React.Component<{}, AppState> {
     });
   };
 
-  private handleRemoveSignature = (index: number) => {
+  private handleRemoveSignature = (toRemove: Signature) => {
     this.setState(prevState => {
       const newSignatures = [...prevState.signatures];
+      const index = prevState.signatures.indexOf(toRemove);
       newSignatures.splice(index, 1);
       return {
         ...prevState,
