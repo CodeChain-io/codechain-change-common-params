@@ -14,7 +14,13 @@ class ParamsEditor extends Component<OwnParams, any> {
       <Col xs={12} className="border rounded px-5 py-3 bg-light">
         <Row>
           <Col xs={12}>
-            <h2>Params</h2>
+            {this.props.disabled || (
+              <span>
+                Edit Params
+                <br />
+                <em>Change parameters as you want</em>
+              </span>
+            )}
           </Col>
         </Row>
         <Row>

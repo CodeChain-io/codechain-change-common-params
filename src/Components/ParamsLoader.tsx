@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Params, RLPBytesToParams } from "../types";
-import { Col, Form, Button } from "react-bootstrap";
+import { Col, Form, Button, Row } from "react-bootstrap";
 
 interface OwnProps {
   onLoadParams: (params: Params) => void;
@@ -21,25 +21,22 @@ export default class ParamsLoader extends Component<OwnProps, OwnState> {
   public render() {
     return (
       <Col xs="12" className="border rounded px-5 py-3 bg-light">
-        <Form className="row">
-          <Form.Group className="row col-12 col-lg-9">
-            <Form.Label column className="col-12 col-lg-3">
-              Load from RLP Data
-            </Form.Label>
+        <Row>
+          <span className="col-12 col-lg-12 mb-3">Load params from RLP Encoded Data</span>
+          <Col xs="12" lg="9" className="mb-3">
             <Form.Control
               type="text"
               value={this.state.typed}
               onChange={this.handleInputChange}
-              className="col"
-              placeholder="Paste RLP data of the Common Params"
+              placeholder="Paste RLP encoded data of the Common Params"
             />
-          </Form.Group>
+          </Col>
           <Col xs="12" lg="3">
             <Button onClick={this.handleClick} variant="primary">
               Import
             </Button>
           </Col>
-        </Form>
+        </Row>
       </Col>
     );
   }

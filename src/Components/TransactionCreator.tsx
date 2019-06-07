@@ -23,14 +23,30 @@ export default class TransactionCreator extends Component<OwnProps, any> {
   public render() {
     return (
       <Col xs="12" className="border rounded px-5 py-3 bg-light">
-        <Button onClick={this.handleClick}> Create Transaction </Button>
+        <div className="mb-3">
+          <span>
+            Create Transaction
+            <br />
+            <em>
+              If you collected enough signatures, press the button below to create
+              ChangeCommonParams transaction.
+            </em>
+          </span>
+        </div>
+
+        <Button onClick={this.handleClick} className="mb-3">
+          {" "}
+          Create Transaction{" "}
+        </Button>
+
         {this.state.transaction && (
           <p className="overflow-wrap">
-            Transaction is created. Please use the encoded transaction in the stakeholder SDK.
+            <em>Transaction is created.</em>
             <br />
-            <span>
-              Encoded Transaction: <br /> {this.state.transaction}
-            </span>
+            <em>Please use the encoded transaction in the stakeholder SDK.</em>
+            <br />
+            <br />
+            <span>{this.state.transaction}</span>
           </p>
         )}
       </Col>

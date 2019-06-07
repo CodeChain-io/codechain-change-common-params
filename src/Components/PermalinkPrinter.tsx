@@ -18,14 +18,22 @@ export default class PermalinkPrinter extends Component<OwnProps, any> {
 
     return (
       <Col xs="12" className="border rounded px-5 py-3 bg-light text-wrap">
-        <h2>Result</h2>
-        <p>Please provide the link below to other stakeholders for signing.</p>
-        {rlpBytes && (
-          <Link to={`/${rlpBytes}`} className="overflow-wrap">
-            {`${window.location.href}${rlpBytes}`}
-          </Link>
-        )}
-        <p className="overflow-wrap mt-1">RLP data of the Params: {rlpBytes || "Invalid Params"}</p>
+        <span>Share</span>
+        <p>
+          <em>Please provide the link below to other stakeholders for signing.</em>
+          <br />
+          {rlpBytes && (
+            <Link to={`/${rlpBytes}`} className="overflow-wrap">
+              {`${window.location.href}${rlpBytes}`}
+            </Link>
+          )}
+        </p>
+
+        <p className="overflow-wrap mt-1">
+          <em>Please use the below RLP data of the Params to load later:</em>
+          <br />
+          {rlpBytes || "Invalid Params"}
+        </p>
       </Col>
     );
   }

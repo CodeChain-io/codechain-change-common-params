@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Signature } from "../types";
-import { Col, Form, Button } from "react-bootstrap";
+import { Col, Form, Button, Row } from "react-bootstrap";
 
 interface OwnProps {
   signatures: Signature[];
@@ -23,9 +23,34 @@ export default class SignatureCollector extends Component<OwnProps, any> {
   public render() {
     return (
       <Col xs="12" className="border rounded px-5 py-3 bg-light">
+        <Row>
+          <Col xs="12" className="mb-3">
+            <span>Collect signature</span>
+            <br />
+            <em>Paste signatures from other stake holders to the input box below.</em>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col className="mb-3">
+            <Form.Control
+              type="text"
+              value={this.state.typed}
+              onChange={this.handleInputChange}
+              placeholder="Paste signature"
+            />
+          </Col>
+
+          <Col xs="12" lg="3">
+            <Button variant="primary" onClick={this.handleAddButtonClick}>
+              Collect
+            </Button>
+          </Col>
+        </Row>
+
         {this.props.signatures.length > 0 && (
           <>
-            <p>Collected Signatures </p>
+            <span>Collected Signatures </span>
             <ul>
               {this.props.signatures.map(signature => (
                 <li key={signature} className="my-1 overflow-wrap">
@@ -44,26 +69,6 @@ export default class SignatureCollector extends Component<OwnProps, any> {
             </ul>
           </>
         )}
-
-        <Form className="row">
-          <Form.Group className="row col-12 col-lg-9">
-            <Form.Label column className="col-12 col-lg-3">
-              Collect signature
-            </Form.Label>
-            <Form.Control
-              type="text"
-              className="col"
-              value={this.state.typed}
-              onChange={this.handleInputChange}
-              placeholder="Paste signature"
-            />
-          </Form.Group>
-          <Col xs="12" lg="3">
-            <Button variant="primary" onClick={this.handleAddButtonClick}>
-              Collect
-            </Button>
-          </Col>
-        </Form>
       </Col>
     );
   }
