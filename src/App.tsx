@@ -42,8 +42,13 @@ export default class App extends React.Component<{}, AppState> {
             onRemoveSignature={this.handleRemoveSignature}
           />
         </Row>
-        <Row>
-          <TransactionCreator params={this.state.params} signatures={this.state.signatures} />
+        <Row className="mt-3 mb-5">
+          {/* The key props reset the TransactionCreator component when the signatures state is changed. */}
+          <TransactionCreator
+            params={this.state.params}
+            signatures={this.state.signatures}
+            key={this.state.signatures.join("-")}
+          />
         </Row>
       </Container>
     );

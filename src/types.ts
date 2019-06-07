@@ -123,6 +123,22 @@ export function paramsToRLPBytes(params: Params): Buffer {
   ]);
 }
 
+export function paramsAndSignaturesToRLPBytes(params: Params, signatures: Signature[]): Buffer {
+  return RLP.encode([
+    0xff,
+    0,
+    ...ParamsKeys.map(key => {
+      // FIXME: This code would be broken easily when a field is added to the Params.
+      if (key === "networkId") {
+        return params[key];
+      } else {
+        return U64.ensure(params[key]).rlpBytes();
+      }
+    }),
+    ...signatures,
+  ]);
+}
+
 function rlpToU64(value: Buffer, debugFieldName: string) {
   try {
     if (value.length === 0) {
