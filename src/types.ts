@@ -108,6 +108,47 @@ export function defaultParams(): Params {
   };
 }
 
+// This is unsafe. Please use when you are confident that it is safe.
+function U64ValueToNumber(value: U64Value | null) {
+  return parseInt(U64.ensure(value || 0).toString(10), 10);
+}
+
+export function paramsFromRPCParams(rpcParams: any): Params {
+  return {
+    maxExtraDataSize: U64ValueToNumber(rpcParams.maxExtraDataSize),
+    maxAssetSchemeMetadataSize: U64ValueToNumber(rpcParams.maxAssetSchemeMetadataSize),
+    maxTransferMetadataSize: U64ValueToNumber(rpcParams.maxTransferMetadataSize),
+    maxTextContentSize: U64ValueToNumber(rpcParams.maxTextContentSize),
+    networkId: rpcParams.networkID,
+    minPayTransactionCost: U64ValueToNumber(rpcParams.minPayCost),
+    minSetRegularKeyTransactionCost: U64ValueToNumber(rpcParams.minSetRegularKeyCost),
+    minCreateShardTransactionCost: U64ValueToNumber(rpcParams.minCreateShardCost),
+    minSetShardOwnersTransactionCost: U64ValueToNumber(rpcParams.minSetShardOwnersCost),
+    minSetShardUsersTransactionCost: U64ValueToNumber(rpcParams.minSetShardUsersCost),
+    minWrapCccTransactionCost: U64ValueToNumber(rpcParams.minWrapCccCost),
+    minCustomTransactionCost: U64ValueToNumber(rpcParams.minCustomCost),
+    minStoreTransactionCost: U64ValueToNumber(rpcParams.minStoreCost),
+    minRemoveTransactionCost: U64ValueToNumber(rpcParams.minRemoveCost),
+    minAssetMintCost: U64ValueToNumber(rpcParams.minMintAssetCost),
+    minAssetTransferCost: U64ValueToNumber(rpcParams.minTransferAssetCost),
+    minAssetSchemeChangeCost: U64ValueToNumber(rpcParams.minChangeAssetSchemeCost),
+    minAssetSupplyIncreaseCost: U64ValueToNumber(rpcParams.minIncreaseAssetSupplyCost),
+    minAssetComposeCost: U64ValueToNumber(rpcParams.minComposeAssetCost),
+    minAssetDecomposeCost: U64ValueToNumber(rpcParams.minDecomposeAssetCost),
+    minAssetUnwrapCccCost: U64ValueToNumber(rpcParams.minUnwrapCccCost),
+    maxBodySize: U64ValueToNumber(rpcParams.maxBodySize),
+    snapshotPeriod: U64ValueToNumber(rpcParams.snapshotPeriod),
+    termSeconds: U64ValueToNumber(rpcParams.termSeconds),
+    nominationExpiration: U64ValueToNumber(rpcParams.nominationExpiration),
+    custodyPeriod: U64ValueToNumber(rpcParams.custodyPeriod),
+    releasePeriod: U64ValueToNumber(rpcParams.releasePeriod),
+    maxNumOfValidators: U64ValueToNumber(rpcParams.maxNumOfValidators),
+    minNumOfValidators: U64ValueToNumber(rpcParams.minNumOfValidators),
+    delegationThreshold: U64ValueToNumber(rpcParams.delegationThreshold),
+    minDeposit: U64ValueToNumber(rpcParams.minDeposit),
+  };
+}
+
 export function paramsToRLPBytes(params: Params): Buffer {
   return RLP.encode([
     0xff,
