@@ -9,7 +9,7 @@ import * as RLP from "rlp";
 type Props = RouteComponentProps;
 
 class Viewer extends Component<Props> {
-  render() {
+  public render() {
     const encodedParams = (this.props.match.params as any).encodedParams;
     const params = RLPBytesToParams(encodedParams);
     return (
