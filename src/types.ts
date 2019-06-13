@@ -157,12 +157,12 @@ export function paramsToRLPBytes(params: Params): Buffer {
   return RLP.encode([
     0xff,
     0,
-    ...ParamsKeys.map(key => {
+    ParamsKeys.map(key => {
       // FIXME: This code would be broken easily when a field is added to the Params.
       if (key === "networkId") {
         return params[key];
       } else {
-        return U64.ensure(params[key]).rlpBytes();
+        return U64ValueToNumber(params[key]);
       }
     }),
   ]);
@@ -172,24 +172,30 @@ export function paramsAndSignaturesToRLPBytes(params: Params, signatures: Signat
   return RLP.encode([
     0xff,
     0,
-    ...ParamsKeys.map(key => {
+    ParamsKeys.map(key => {
       // FIXME: This code would be broken easily when a field is added to the Params.
       if (key === "networkId") {
         return params[key];
       } else {
-        return U64.ensure(params[key]).rlpBytes();
+        return U64ValueToNumber(params[key]);
       }
     }),
-    ...signatures,
+    ...signatures.map(signature => {
+      if (signature.startsWith("0x")) {
+        return signature;
+      } else {
+        return `0x${signature}`;
+      }
+    }),
   ]);
 }
 
-function rlpToU64(value: Buffer, debugFieldName: string) {
+function bufferToNumber(value: Buffer, debugFieldName: string) {
   try {
     if (value.length === 0) {
       return new U64(0);
     } else {
-      return U64.fromBytes(value);
+      return value.readUIntBE(0, value.length);
     }
   } catch (err) {
     const newError = new Error(`Failed to decode ${debugFieldName}`);
@@ -201,10 +207,12 @@ function rlpToU64(value: Buffer, debugFieldName: string) {
 export function RLPBytesToParams(hex: string): Params {
   const decoded: Buffer[] = RLP.decode(new Buffer(hex, "hex")) as any;
 
-  if (decoded.length !== ParamsKeys.length + 2) {
-    throw new Error(
-      `Invalid RLP: length of the input: ${decoded.length} should be ${ParamsKeys.length + 2}`,
-    );
+  if (decoded.length !== 3) {
+    throw new Error(`Invalid RLP: length of the input: ${decoded.length} should be 3}`);
+  }
+
+  if (decoded[2].length !== 32) {
+    throw new Error(`Invalid RLP: length of the input: ${decoded.length} should be 32}`);
   }
 
   if (decoded[0].toString("hex") !== "ff") {
@@ -214,8 +222,6 @@ export function RLPBytesToParams(hex: string): Params {
     throw new Error(`Invalid format`);
   }
   const [
-    ,
-    ,
     maxExtraDataSizeRaw,
     maxAssetSchemeMetadataSizeRaw,
     maxTransferMetadataSizeRaw,
@@ -248,59 +254,74 @@ export function RLPBytesToParams(hex: string): Params {
     delegationThresholdRaw,
     minDepositRaw,
     maxCandidateMetadataSizeRaw,
-  ] = decoded;
+  ] = decoded[2] as any;
 
   return {
-    maxExtraDataSize: rlpToU64(maxExtraDataSizeRaw, "maxExtraDataSize"),
-    maxAssetSchemeMetadataSize: rlpToU64(
+    maxExtraDataSize: bufferToNumber(maxExtraDataSizeRaw, "maxExtraDataSize"),
+    maxAssetSchemeMetadataSize: bufferToNumber(
       maxAssetSchemeMetadataSizeRaw,
       "maxAssetSchemeMetadataSize",
     ),
-    maxTransferMetadataSize: rlpToU64(maxTransferMetadataSizeRaw, "maxTransferMetadataSize"),
-    maxTextContentSize: rlpToU64(maxTextContentSizeRaw, "maxTextContentSize"),
+    maxTransferMetadataSize: bufferToNumber(maxTransferMetadataSizeRaw, "maxTransferMetadataSize"),
+    maxTextContentSize: bufferToNumber(maxTextContentSizeRaw, "maxTextContentSize"),
     networkId: networkIdRaw.toString("ascii"),
-    minPayTransactionCost: rlpToU64(minPayTransactionCostRaw, "minPayTransactionCost"),
-    minSetRegularKeyTransactionCost: rlpToU64(
+    minPayTransactionCost: bufferToNumber(minPayTransactionCostRaw, "minPayTransactionCost"),
+    minSetRegularKeyTransactionCost: bufferToNumber(
       minSetRegularKeyTransactionCostRaw,
       "minSetRegularKeyTransactionCost",
     ),
-    minCreateShardTransactionCost: rlpToU64(
+    minCreateShardTransactionCost: bufferToNumber(
       minCreateShardTransactionCostRaw,
       "minCreateShardTransactionCost",
     ),
-    minSetShardOwnersTransactionCost: rlpToU64(
+    minSetShardOwnersTransactionCost: bufferToNumber(
       minSetShardOwnersTransactionCostRaw,
       "minSetShardOwnersTransactionCost",
     ),
-    minSetShardUsersTransactionCost: rlpToU64(
+    minSetShardUsersTransactionCost: bufferToNumber(
       minSetShardUsersTransactionCostRaw,
       "minSetShardUsersTransactionCost",
     ),
-    minWrapCccTransactionCost: rlpToU64(minWrapCccTransactionCostRaw, "minWrapCccTransactionCost"),
-    minCustomTransactionCost: rlpToU64(minCustomTransactionCostRaw, "minCustomTransactionCost"),
-    minStoreTransactionCost: rlpToU64(minStoreTransactionCostRaw, "minStoreTransactionCost"),
-    minRemoveTransactionCost: rlpToU64(minRemoveTransactionCostRaw, "minRemoveTransactionCost"),
-    minAssetMintCost: rlpToU64(minAssetMintCostRaw, "minAssetMintCost"),
-    minAssetTransferCost: rlpToU64(minAssetTransferCostRaw, "minAssetTransferCost"),
-    minAssetSchemeChangeCost: rlpToU64(minAssetSchemeChangeCostRaw, "minAssetSchemeChangeCost"),
-    minAssetSupplyIncreaseCost: rlpToU64(
+    minWrapCccTransactionCost: bufferToNumber(
+      minWrapCccTransactionCostRaw,
+      "minWrapCccTransactionCost",
+    ),
+    minCustomTransactionCost: bufferToNumber(
+      minCustomTransactionCostRaw,
+      "minCustomTransactionCost",
+    ),
+    minStoreTransactionCost: bufferToNumber(minStoreTransactionCostRaw, "minStoreTransactionCost"),
+    minRemoveTransactionCost: bufferToNumber(
+      minRemoveTransactionCostRaw,
+      "minRemoveTransactionCost",
+    ),
+    minAssetMintCost: bufferToNumber(minAssetMintCostRaw, "minAssetMintCost"),
+    minAssetTransferCost: bufferToNumber(minAssetTransferCostRaw, "minAssetTransferCost"),
+    minAssetSchemeChangeCost: bufferToNumber(
+      minAssetSchemeChangeCostRaw,
+      "minAssetSchemeChangeCost",
+    ),
+    minAssetSupplyIncreaseCost: bufferToNumber(
       minAssetSupplyIncreaseCostRaw,
       "minAssetSupplyIncreaseCost",
     ),
-    minAssetComposeCost: rlpToU64(minAssetComposeCostRaw, "minAssetComposeCost"),
-    minAssetDecomposeCost: rlpToU64(minAssetDecomposeCostRaw, "minAssetDecomposeCost"),
-    minAssetUnwrapCccCost: rlpToU64(minAssetUnwrapCccCostRaw, "minAssetUnwrapCccCost"),
-    maxBodySize: rlpToU64(maxBodySizeRaw, "maxBodySize"),
-    snapshotPeriod: rlpToU64(snapshotPeriodRaw, "snapshotPeriod"),
-    termSeconds: rlpToU64(termSecondsRaw, "termSeconds"),
-    nominationExpiration: rlpToU64(nominationExpirationRaw, "nominationExpiration"),
-    custodyPeriod: rlpToU64(custodyPeriodRaw, "custodyPeriod"),
-    releasePeriod: rlpToU64(releasePeriodRaw, "releasePeriod"),
-    maxNumOfValidators: rlpToU64(maxNumOfValidatorsRaw, "maxNumOfValidators"),
-    minNumOfValidators: rlpToU64(minNumOfValidatorsRaw, "minNumOfValidators"),
-    delegationThreshold: rlpToU64(delegationThresholdRaw, "delegationThreshold"),
-    minDeposit: rlpToU64(minDepositRaw, "minDeposit"),
-    maxCandidateMetadataSize: rlpToU64(maxCandidateMetadataSizeRaw, "maxCandidateMetadataSize"),
+    minAssetComposeCost: bufferToNumber(minAssetComposeCostRaw, "minAssetComposeCost"),
+    minAssetDecomposeCost: bufferToNumber(minAssetDecomposeCostRaw, "minAssetDecomposeCost"),
+    minAssetUnwrapCccCost: bufferToNumber(minAssetUnwrapCccCostRaw, "minAssetUnwrapCccCost"),
+    maxBodySize: bufferToNumber(maxBodySizeRaw, "maxBodySize"),
+    snapshotPeriod: bufferToNumber(snapshotPeriodRaw, "snapshotPeriod"),
+    termSeconds: bufferToNumber(termSecondsRaw, "termSeconds"),
+    nominationExpiration: bufferToNumber(nominationExpirationRaw, "nominationExpiration"),
+    custodyPeriod: bufferToNumber(custodyPeriodRaw, "custodyPeriod"),
+    releasePeriod: bufferToNumber(releasePeriodRaw, "releasePeriod"),
+    maxNumOfValidators: bufferToNumber(maxNumOfValidatorsRaw, "maxNumOfValidators"),
+    minNumOfValidators: bufferToNumber(minNumOfValidatorsRaw, "minNumOfValidators"),
+    delegationThreshold: bufferToNumber(delegationThresholdRaw, "delegationThreshold"),
+    minDeposit: bufferToNumber(minDepositRaw, "minDeposit"),
+    maxCandidateMetadataSize: bufferToNumber(
+      maxCandidateMetadataSizeRaw,
+      "maxCandidateMetadataSize",
+    ),
   };
 }
 
