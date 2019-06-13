@@ -35,6 +35,7 @@ export interface Params {
   minNumOfValidators: U64Value;
   delegationThreshold: U64Value;
   minDeposit: U64Value;
+  maxCandidateMetadataSize: U64Value;
 }
 
 export const ParamsKeys: (keyof Params)[] = [
@@ -69,6 +70,7 @@ export const ParamsKeys: (keyof Params)[] = [
   "minNumOfValidators",
   "delegationThreshold",
   "minDeposit",
+  "maxCandidateMetadataSize",
 ];
 
 export function defaultParams(): Params {
@@ -105,6 +107,7 @@ export function defaultParams(): Params {
     minNumOfValidators: 0,
     delegationThreshold: 0,
     minDeposit: 0,
+    maxCandidateMetadataSize: 0,
   };
 }
 
@@ -146,6 +149,7 @@ export function paramsFromRPCParams(rpcParams: any): Params {
     minNumOfValidators: U64ValueToNumber(rpcParams.minNumOfValidators),
     delegationThreshold: U64ValueToNumber(rpcParams.delegationThreshold),
     minDeposit: U64ValueToNumber(rpcParams.minDeposit),
+    maxCandidateMetadataSize: U64ValueToNumber(rpcParams.max_candidate_metadata_size),
   };
 }
 
@@ -243,6 +247,7 @@ export function RLPBytesToParams(hex: string): Params {
     minNumOfValidatorsRaw,
     delegationThresholdRaw,
     minDepositRaw,
+    maxCandidateMetadataSizeRaw,
   ] = decoded;
 
   return {
@@ -295,6 +300,7 @@ export function RLPBytesToParams(hex: string): Params {
     minNumOfValidators: rlpToU64(minNumOfValidatorsRaw, "minNumOfValidators"),
     delegationThreshold: rlpToU64(delegationThresholdRaw, "delegationThreshold"),
     minDeposit: rlpToU64(minDepositRaw, "minDeposit"),
+    maxCandidateMetadataSize: rlpToU64(maxCandidateMetadataSizeRaw, "maxCandidateMetadataSize"),
   };
 }
 
