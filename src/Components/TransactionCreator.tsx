@@ -12,7 +12,7 @@ interface OwnState {
   transaction: string | null;
 }
 
-export default class TransactionCreator extends Component<OwnProps, any> {
+export default class TransactionCreator extends Component<OwnProps, OwnState> {
   public constructor(props: OwnProps) {
     super(props);
     this.state = {
