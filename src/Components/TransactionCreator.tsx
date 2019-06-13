@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Params, Signature, paramsAndSignaturesToRLPBytes } from "../types";
 import { Col, Button } from "react-bootstrap";
-import { SDK } from "codechain-sdk";
 
 interface OwnProps {
   params: Params;
@@ -9,14 +8,14 @@ interface OwnProps {
 }
 
 interface OwnState {
-  transaction: string | null;
+  paramsAndSignatures: string | null;
 }
 
 export default class TransactionCreator extends Component<OwnProps, OwnState> {
   public constructor(props: OwnProps) {
     super(props);
     this.state = {
-      transaction: null,
+      paramsAndSignatures: null,
     };
   }
 
@@ -39,14 +38,14 @@ export default class TransactionCreator extends Component<OwnProps, OwnState> {
           Create Transaction{" "}
         </Button>
 
-        {this.state.transaction && (
+        {this.state.paramsAndSignatures && (
           <p className="overflow-wrap">
             <em>Transaction is created.</em>
             <br />
-            <em>Please use the encoded transaction in the stakeholder SDK.</em>
+            <em>Please use the encoded paramsAndSignatures in the stakeholder SDK.</em>
             <br />
             <br />
-            <span>{this.state.transaction}</span>
+            <span>{this.state.paramsAndSignatures}</span>
           </p>
         )}
       </Col>
@@ -55,19 +54,8 @@ export default class TransactionCreator extends Component<OwnProps, OwnState> {
 
   private handleClick = (_event: any) => {
     const rlpBytes = paramsAndSignaturesToRLPBytes(this.props.params, this.props.signatures);
-    const sdk = new SDK({
-      // Use meaningless URL to create a instance of the SDK.
-      server: "http://dummy.codechain.io",
-    });
-    const transaction = sdk.core.createCustomTransaction({
-      handlerId: 2,
-      bytes: rlpBytes,
-    });
-    // Sequence and fee should be changed by the fee payer.
-    transaction.setSeq(0);
-    transaction.setFee(1);
     this.setState({
-      transaction: transaction.rlpBytes().toString("hex"),
+      paramsAndSignatures: rlpBytes.toString("hex"),
     });
   };
 }
