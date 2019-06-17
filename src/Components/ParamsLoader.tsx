@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Params, RLPBytesToParams, paramsFromRPCParams } from "../types";
+import { Params, RLPBytesToParams, paramsFromRPCParams, ParamsAndSeq } from "../types";
 import { Col, Form, Button, Row } from "react-bootstrap";
 import { SDK } from "codechain-sdk";
 
 interface OwnProps {
-  onLoadParams: (params: Params) => void;
+  onLoadParamsAndSeq: (paramsAndSeq: ParamsAndSeq) => void;
 }
 
 interface OwnState {
@@ -12,12 +12,19 @@ interface OwnState {
   typedCodeChainRPCURL: string;
 }
 
-async function loadFromRPC(rpcURL: string): Promise<Params> {
+async function loadParamsFromRPC(rpcURL: string): Promise<Params> {
   const sdk = new SDK({
     server: rpcURL,
   });
   const rpcParams = await sdk.rpc.sendRpcRequest("chain_getCommonParams", [null]);
   return paramsFromRPCParams(rpcParams);
+}
+
+function loadSeqFromRPC(rpcURL: string): Promise<number> {
+  const sdk = new SDK({
+    server: rpcURL,
+  });
+  return sdk.rpc.sendRpcRequest("chain_getMetadataSeq", [null]);
 }
 
 export default class ParamsLoader extends Component<OwnProps, OwnState> {
@@ -79,8 +86,8 @@ export default class ParamsLoader extends Component<OwnProps, OwnState> {
     const rawParams = this.state.typedRLPEncoded;
 
     try {
-      const newParams = RLPBytesToParams(rawParams);
-      this.props.onLoadParams(newParams);
+      const newParamsAndSeq = RLPBytesToParams(rawParams);
+      this.props.onLoadParamsAndSeq(newParamsAndSeq);
     } catch (err) {
       console.error(err);
       // FIXME: show the error message in the page.
@@ -96,12 +103,17 @@ export default class ParamsLoader extends Component<OwnProps, OwnState> {
   };
 
   private handleRPCURLClick = async (_event: any) => {
-    const rawParams = this.state.typedCodeChainRPCURL;
+    const rpcURL = this.state.typedCodeChainRPCURL;
 
     try {
-      const newParams = await loadFromRPC(rawParams);
-      console.log(newParams);
-      this.props.onLoadParams(newParams);
+      const [newParams, newSeq] = await Promise.all([
+        loadParamsFromRPC(rpcURL),
+        loadSeqFromRPC(rpcURL),
+      ]);
+      this.props.onLoadParamsAndSeq({
+        params: newParams,
+        seq: newSeq,
+      });
     } catch (err) {
       console.error(err);
       alert(err);

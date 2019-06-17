@@ -4,6 +4,7 @@ import { Col, Button } from "react-bootstrap";
 
 interface OwnProps {
   params: Params;
+  seq: number;
   signatures: Signature[];
 }
 
@@ -53,7 +54,13 @@ export default class TransactionCreator extends Component<OwnProps, OwnState> {
   }
 
   private handleClick = (_event: any) => {
-    const rlpBytes = paramsAndSignaturesToRLPBytes(this.props.params, this.props.signatures);
+    const rlpBytes = paramsAndSignaturesToRLPBytes(
+      {
+        params: this.props.params,
+        seq: this.props.seq,
+      },
+      this.props.signatures,
+    );
     this.setState({
       paramsAndSignatures: rlpBytes.toString("hex"),
     });

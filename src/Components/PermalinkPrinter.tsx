@@ -5,13 +5,17 @@ import { Link } from "react-router-dom";
 
 interface OwnProps {
   params: Params;
+  seq: number;
 }
 
 export default class PermalinkPrinter extends Component<OwnProps, any> {
   public render() {
     let rlpBytes = null;
     try {
-      rlpBytes = paramsToRLPBytes(this.props.params).toString("hex");
+      rlpBytes = paramsToRLPBytes({
+        params: this.props.params,
+        seq: this.props.seq,
+      }).toString("hex");
     } catch (_err) {
       rlpBytes = null;
     }
