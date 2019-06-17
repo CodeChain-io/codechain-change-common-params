@@ -4,14 +4,18 @@ import ParamsEditor from "./Components/ParamsEditor";
 import PermalinkPrinter from "./Components/PermalinkPrinter";
 import SignatureCollector from "./Components/SignatureCollector";
 import TransactionCreator from "./Components/TransactionCreator";
-import { Params, defaultParams, Signature } from "./types";
+import { Params, defaultParams, Signature, ParamsAndSeq } from "./types";
 import { Container, Row } from "react-bootstrap";
 import { Route } from "react-router-dom";
 import Viewer from "./Viewer";
 
 type AppState = {
+  seq: number;
   params: Params;
   signatures: Signature[];
+  // The `paramsEditorKey` is changed when the params and seq are updated from the loader.
+  // New ParamsEditor will be created if the paramsEditorKey is changed.
+  paramsEditorKey: number;
 };
 
 export default class App extends React.Component<{}, AppState> {
@@ -19,7 +23,9 @@ export default class App extends React.Component<{}, AppState> {
     super(props);
 
     this.state = {
+      seq: 0,
       params: defaultParams(),
+      paramsEditorKey: 0,
       signatures: [],
     };
   }
@@ -38,13 +44,17 @@ export default class App extends React.Component<{}, AppState> {
       <Container>
         <h1 className="mt-3">Change Common Params</h1>
         <Row className="mt-1">
-          <ParamsLoader onLoadParams={this.handleLoadParams} />
+          <ParamsLoader onLoadParamsAndSeq={this.handleLoadParamsAndSeq} />
         </Row>
         <Row className="mt-3">
-          <ParamsEditor params={this.state.params} onChangeParams={this.handleChangeParams} />
+          <ParamsEditor
+            key={this.state.paramsEditorKey}
+            paramsAndSeq={{ params: this.state.params, seq: this.state.seq }}
+            onChangeParamsAndSeq={this.handleChangeParamsAndSeq}
+          />
         </Row>
         <Row className="mt-3">
-          <PermalinkPrinter params={this.state.params} />
+          <PermalinkPrinter params={this.state.params} seq={this.state.seq} />
         </Row>
         <Row className="mt-3">
           <SignatureCollector
@@ -57,6 +67,7 @@ export default class App extends React.Component<{}, AppState> {
           {/* The key props reset the TransactionCreator component when the signatures state is changed. */}
           <TransactionCreator
             params={this.state.params}
+            seq={this.state.seq}
             signatures={this.state.signatures}
             key={this.state.signatures.join("-")}
           />
@@ -65,15 +76,18 @@ export default class App extends React.Component<{}, AppState> {
     );
   };
 
-  private handleLoadParams = (newParams: Params) => {
+  private handleLoadParamsAndSeq = ({ params, seq }: ParamsAndSeq) => {
     this.setState({
-      params: newParams,
+      params,
+      seq,
+      paramsEditorKey: Math.random(),
     });
   };
 
-  private handleChangeParams = (changedParams: Params) => {
+  private handleChangeParamsAndSeq = (changedParamsAndSeq: ParamsAndSeq) => {
     this.setState({
-      params: changedParams,
+      params: changedParamsAndSeq.params,
+      seq: changedParamsAndSeq.seq,
     });
   };
 

@@ -11,11 +11,11 @@ type Props = RouteComponentProps;
 class Viewer extends Component<Props> {
   public render() {
     const encodedParams = (this.props.match.params as any).encodedParams;
-    const params = RLPBytesToParams(encodedParams);
+    const paramsAndSeq = RLPBytesToParams(encodedParams);
     return (
       <Container>
         <Row className="mt-5">
-          <ParamsEditor params={params} onChangeParams={this.noOp} disabled />
+          <ParamsEditor paramsAndSeq={paramsAndSeq} onChangeParamsAndSeq={this.noOp} disabled />
         </Row>
         <Row className="mb-5 mt-3">
           <Col xs={12} className="border rounded px-5 py-3 bg-light overflow-wrap">

@@ -38,6 +38,11 @@ export interface Params {
   maxCandidateMetadataSize: U64Value;
 }
 
+export interface ParamsAndSeq {
+  params: Params;
+  seq: number;
+}
+
 export const ParamsKeys: (keyof Params)[] = [
   "maxExtraDataSize",
   "maxAssetSchemeMetadataSize",
@@ -153,10 +158,10 @@ export function paramsFromRPCParams(rpcParams: any): Params {
   };
 }
 
-export function paramsToRLPBytes(params: Params): Buffer {
+export function paramsToRLPBytes({ params, seq }: ParamsAndSeq): Buffer {
   return RLP.encode([
     0xff,
-    0,
+    seq,
     ParamsKeys.map(key => {
       // FIXME: This code would be broken easily when a field is added to the Params.
       if (key === "networkId") {
@@ -168,10 +173,13 @@ export function paramsToRLPBytes(params: Params): Buffer {
   ]);
 }
 
-export function paramsAndSignaturesToRLPBytes(params: Params, signatures: Signature[]): Buffer {
+export function paramsAndSignaturesToRLPBytes(
+  { params, seq }: ParamsAndSeq,
+  signatures: Signature[],
+): Buffer {
   return RLP.encode([
     0xff,
-    0,
+    seq,
     ParamsKeys.map(key => {
       // FIXME: This code would be broken easily when a field is added to the Params.
       if (key === "networkId") {
@@ -190,10 +198,10 @@ export function paramsAndSignaturesToRLPBytes(params: Params, signatures: Signat
   ]);
 }
 
-function bufferToNumber(value: Buffer, debugFieldName: string) {
+function bufferToNumber(value: Buffer, debugFieldName: string): number {
   try {
     if (value.length === 0) {
-      return new U64(0);
+      return 0;
     } else {
       return value.readUIntBE(0, value.length);
     }
@@ -204,7 +212,7 @@ function bufferToNumber(value: Buffer, debugFieldName: string) {
   }
 }
 
-export function RLPBytesToParams(hex: string): Params {
+export function RLPBytesToParams(hex: string): ParamsAndSeq {
   const decoded: Buffer[] = RLP.decode(new Buffer(hex, "hex")) as any;
 
   if (decoded.length !== 3) {
@@ -218,9 +226,8 @@ export function RLPBytesToParams(hex: string): Params {
   if (decoded[0].toString("hex") !== "ff") {
     throw new Error(`Invalid format:  expected: "ff" but found ${decoded[0].toString("hex")}`);
   }
-  if (decoded[1].length !== 0) {
-    throw new Error(`Invalid format`);
-  }
+  const seq = bufferToNumber(decoded[1], "seq");
+
   const [
     maxExtraDataSizeRaw,
     maxAssetSchemeMetadataSizeRaw,
@@ -256,7 +263,7 @@ export function RLPBytesToParams(hex: string): Params {
     maxCandidateMetadataSizeRaw,
   ] = decoded[2] as any;
 
-  return {
+  const params = {
     maxExtraDataSize: bufferToNumber(maxExtraDataSizeRaw, "maxExtraDataSize"),
     maxAssetSchemeMetadataSize: bufferToNumber(
       maxAssetSchemeMetadataSizeRaw,
@@ -322,6 +329,11 @@ export function RLPBytesToParams(hex: string): Params {
       maxCandidateMetadataSizeRaw,
       "maxCandidateMetadataSize",
     ),
+  };
+
+  return {
+    params,
+    seq,
   };
 }
 
