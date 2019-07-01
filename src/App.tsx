@@ -42,7 +42,7 @@ export default class App extends React.Component<{}, AppState> {
   private Index = () => {
     return (
       <Container>
-        <h1 className="mt-3">Change Common Params</h1>
+        <h1 className="mt-3">CodeChain Change Common Params</h1>
         <Row className="mt-1">
           <ParamsLoader onLoadParamsAndSeq={this.handleLoadParamsAndSeq} />
         </Row>
