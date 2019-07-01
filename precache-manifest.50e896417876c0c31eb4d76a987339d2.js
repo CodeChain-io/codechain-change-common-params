@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "37a863b42ad641ae40d5c3697e2a9580",
+    "revision": "ba5aa0056146d2f682f541099f7ff1aa",
     "url": "/codechain-change-common-params/index.html"
   },
   {
-    "revision": "b745ed5de99b8f79b95a",
+    "revision": "a0e4bc694b2583f93eb8",
     "url": "/codechain-change-common-params/static/css/main.309b6346.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/codechain-change-common-params/static/js/2.d2d86625.chunk.js"
   },
   {
-    "revision": "b745ed5de99b8f79b95a",
-    "url": "/codechain-change-common-params/static/js/main.cdd2604f.chunk.js"
+    "revision": "a0e4bc694b2583f93eb8",
+    "url": "/codechain-change-common-params/static/js/main.bb9bcec2.chunk.js"
   },
   {
     "revision": "67362536336025c1c4c9",
