@@ -1,15 +1,22 @@
 {
   "files": {
-    "main.css": "/codechain-change-common-params/static/css/main.309b6346.chunk.css",
-    "main.js": "/codechain-change-common-params/static/js/main.0c701fc5.chunk.js",
-    "main.js.map": "/codechain-change-common-params/static/js/main.0c701fc5.chunk.js.map",
-    "runtime~main.js": "/codechain-change-common-params/static/js/runtime~main.4d46c1ed.js",
-    "runtime~main.js.map": "/codechain-change-common-params/static/js/runtime~main.4d46c1ed.js.map",
-    "static/js/2.29625bfb.chunk.js": "/codechain-change-common-params/static/js/2.29625bfb.chunk.js",
-    "static/js/2.29625bfb.chunk.js.map": "/codechain-change-common-params/static/js/2.29625bfb.chunk.js.map",
+    "main.css": "/codechain-change-common-params/static/css/main.bbc60710.chunk.css",
+    "main.js": "/codechain-change-common-params/static/js/main.7af56d47.chunk.js",
+    "main.js.map": "/codechain-change-common-params/static/js/main.7af56d47.chunk.js.map",
+    "runtime-main.js": "/codechain-change-common-params/static/js/runtime-main.5d8434fe.js",
+    "runtime-main.js.map": "/codechain-change-common-params/static/js/runtime-main.5d8434fe.js.map",
+    "static/js/2.61d09259.chunk.js": "/codechain-change-common-params/static/js/2.61d09259.chunk.js",
+    "static/js/2.61d09259.chunk.js.map": "/codechain-change-common-params/static/js/2.61d09259.chunk.js.map",
     "index.html": "/codechain-change-common-params/index.html",
-    "precache-manifest.77edfb0784df5d060c25cac323a7449d.js": "/codechain-change-common-params/precache-manifest.77edfb0784df5d060c25cac323a7449d.js",
+    "precache-manifest.1ed0d25acc3b243118e71261d4430c20.js": "/codechain-change-common-params/precache-manifest.1ed0d25acc3b243118e71261d4430c20.js",
     "service-worker.js": "/codechain-change-common-params/service-worker.js",
-    "static/css/main.309b6346.chunk.css.map": "/codechain-change-common-params/static/css/main.309b6346.chunk.css.map"
-  }
+    "static/css/main.bbc60710.chunk.css.map": "/codechain-change-common-params/static/css/main.bbc60710.chunk.css.map",
+    "static/js/2.61d09259.chunk.js.LICENSE": "/codechain-change-common-params/static/js/2.61d09259.chunk.js.LICENSE"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5d8434fe.js",
+    "static/js/2.61d09259.chunk.js",
+    "static/css/main.bbc60710.chunk.css",
+    "static/js/main.7af56d47.chunk.js"
+  ]
 }
